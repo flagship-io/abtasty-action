@@ -7,13 +7,15 @@ import { homedir } from 'os'
 import { Cli, CliVersion } from './cliCommand'
 import { CliDownloader } from './cliDownloader'
 import {
-  CREATE_CONFIGURATION,
-  DELETE_CONFIGURATION,
-  EDIT_CONFIGURATION,
-  GET_FLAG,
-  LIST_FLAG,
-  LOAD_RESOURCE,
-  USE_CONFIGURATION
+  FEATURE_LIST_CAMPAIGN,
+  FEATURE_LIST_FLAG,
+  FEATURE_LIST_GOAL,
+  FEATURE_LIST_PROJECT,
+  FEATURE_LIST_TARGETING_KEY,
+  FEATURE_LIST_VARIATION,
+  FEATURE_LIST_VARIATION_GROUP,
+  FEATURE_LOAD_RESOURCE,
+  FEATURE_LOGIN_AUTH
 } from './const'
 /**
  * The main function for the action.
@@ -22,6 +24,7 @@ import {
 
 type CliRequest = {
   commandId: string
+  product: string
   method: string
   resource: string
   flags: string
@@ -29,59 +32,79 @@ type CliRequest = {
 
 const buildInputs = () => {
   var commandRequests = {}
-  const createConfiguration = core.getMultilineInput(CREATE_CONFIGURATION)
-  if (core.getInput(CREATE_CONFIGURATION)) {
+  const featureLoginAuth = core.getMultilineInput(FEATURE_LOGIN_AUTH)
+  if (core.getInput(FEATURE_LOGIN_AUTH)) {
     commandRequests = {
       ...commandRequests,
-      [CREATE_CONFIGURATION]: createConfiguration
+      [FEATURE_LOGIN_AUTH]: featureLoginAuth
     }
   }
 
-  const editConfiguration = core.getMultilineInput(EDIT_CONFIGURATION)
-  if (core.getInput(EDIT_CONFIGURATION)) {
+  const featureListFlag = core.getMultilineInput(FEATURE_LIST_FLAG)
+  if (core.getInput(FEATURE_LIST_FLAG)) {
     commandRequests = {
       ...commandRequests,
-      [EDIT_CONFIGURATION]: editConfiguration
+      [FEATURE_LIST_FLAG]: featureListFlag
     }
   }
 
-  const deleteConfiguration = core.getMultilineInput(DELETE_CONFIGURATION)
-  if (core.getInput(DELETE_CONFIGURATION)) {
+  const featureListCampaign = core.getMultilineInput(FEATURE_LIST_CAMPAIGN)
+  if (core.getInput(FEATURE_LIST_CAMPAIGN)) {
     commandRequests = {
       ...commandRequests,
-      [DELETE_CONFIGURATION]: deleteConfiguration
+      [FEATURE_LIST_CAMPAIGN]: featureListCampaign
     }
   }
 
-  const useConfiguration = core.getMultilineInput(USE_CONFIGURATION)
-  if (core.getInput(USE_CONFIGURATION)) {
+  const featureListProject = core.getMultilineInput(FEATURE_LIST_PROJECT)
+  if (core.getInput(FEATURE_LIST_PROJECT)) {
     commandRequests = {
       ...commandRequests,
-      [USE_CONFIGURATION]: useConfiguration
+      [FEATURE_LIST_PROJECT]: featureListProject
     }
   }
 
-  const getFlag = core.getMultilineInput(GET_FLAG)
-  if (core.getInput(GET_FLAG)) {
+  const featureListGoal = core.getMultilineInput(FEATURE_LIST_GOAL)
+  if (core.getInput(FEATURE_LIST_GOAL)) {
     commandRequests = {
       ...commandRequests,
-      [GET_FLAG]: getFlag
+      [FEATURE_LIST_GOAL]: featureListGoal
     }
   }
 
-  const listFlag = core.getMultilineInput(LIST_FLAG)
-  if (core.getInput(LIST_FLAG)) {
+  const featureListTargetingKey = core.getMultilineInput(
+    FEATURE_LIST_TARGETING_KEY
+  )
+  if (core.getInput(FEATURE_LIST_TARGETING_KEY)) {
     commandRequests = {
       ...commandRequests,
-      [LIST_FLAG]: listFlag
+      [FEATURE_LIST_TARGETING_KEY]: featureListTargetingKey
     }
   }
 
-  const loadResource = core.getMultilineInput(LOAD_RESOURCE)
-  if (core.getInput(LOAD_RESOURCE)) {
+  const featureListVariationGroup = core.getMultilineInput(
+    FEATURE_LIST_VARIATION_GROUP
+  )
+  if (core.getInput(FEATURE_LIST_VARIATION_GROUP)) {
     commandRequests = {
       ...commandRequests,
-      [LOAD_RESOURCE]: loadResource
+      [FEATURE_LIST_VARIATION_GROUP]: featureListVariationGroup
+    }
+  }
+
+  const featureListVariation = core.getMultilineInput(FEATURE_LIST_VARIATION)
+  if (core.getInput(FEATURE_LIST_VARIATION)) {
+    commandRequests = {
+      ...commandRequests,
+      [FEATURE_LIST_VARIATION]: featureListVariation
+    }
+  }
+
+  const featureLoadResource = core.getMultilineInput(FEATURE_LOAD_RESOURCE)
+  if (core.getInput(FEATURE_LOAD_RESOURCE)) {
+    commandRequests = {
+      ...commandRequests,
+      [FEATURE_LOAD_RESOURCE]: featureLoadResource
     }
   }
 
@@ -94,6 +117,7 @@ const buildCommands = (
   var cliRequests: CliRequest[] = []
   for (const [key, value] of Object.entries(commandRequests)) {
     var args: string = ''
+    var product: string = ''
     var commandId: string = ''
     value?.map((f: string) => {
       var f_ = f.replaceAll(' ', '').split(':')
@@ -101,6 +125,7 @@ const buildCommands = (
         commandId = f_[1]
         return
       }
+
       args =
         f_.length > 1
           ? args.concat(`--${f_[0]}=${f_[1]} `)
@@ -110,8 +135,9 @@ const buildCommands = (
     const splitted = key.split('-')
     cliRequests.push({
       commandId,
-      method: splitted[0],
-      resource: splitted[1],
+      product: splitted[0],
+      method: splitted[1],
+      resource: splitted[2],
       flags: args
     } as CliRequest)
   }
@@ -120,12 +146,11 @@ const buildCommands = (
 
 export async function run(): Promise<void> {
   try {
-    const flagshipDir = 'flagship'
-    const binaryDir = `${flagshipDir}/${CliVersion}`
-    const internalFlagshipDir = '/home/runner/.flagship'
+    const abtastyDir = 'abtasty-cli'
+    const binaryDir = `${abtastyDir}/${CliVersion}`
+    const internalABTastyDir = '/home/runner/.abtasty'
     //const internalFlagshipDir = '.flagship'
 
-    const internalConfigutations = `${internalFlagshipDir}/configurations`
     var cliResponse = {}
 
     /*     if (!fs.existsSync(internalFlagshipDir)) {
@@ -150,7 +175,12 @@ export async function run(): Promise<void> {
     const cliRequests = buildCommands(commandRequests)
 
     for (const r of cliRequests) {
-      const result = await cli.Resource(r.resource, r.method, r.flags)
+      const result = await cli.Resource(
+        r.product,
+        r.resource,
+        r.method,
+        r.flags
+      )
       cliResponse = {
         ...cliResponse,
         [r.commandId]: result

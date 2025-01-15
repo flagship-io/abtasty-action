@@ -1,8 +1,13 @@
-export const CREATE_CONFIGURATION = 'create-configuration'
-export const EDIT_CONFIGURATION = 'edit-configuration'
-export const DELETE_CONFIGURATION = 'delete-configuration'
-export const USE_CONFIGURATION = 'use-configuration'
+export const FEATURE_LOGIN_AUTH = 'fe-login-auth'
 
-export const LIST_FLAG = 'list-flag'
-export const GET_FLAG = 'get-flag'
-export const LOAD_RESOURCE = 'load-resource'
+export const FEATURE_LIST_FLAG = 'fe-list-flag'
+export const FEATURE_LIST_CAMPAIGN = 'fe-list-campaign'
+export const FEATURE_LIST_PROJECT = 'fe-list-project'
+export const FEATURE_LIST_GOAL = 'fe-list-goal'
+export const FEATURE_LIST_TARGETING_KEY = 'fe-list-tk'
+export const FEATURE_LIST_VARIATION_GROUP = 'fe-list-vg'
+export const FEATURE_LIST_VARIATION = 'fe-list-variation'
+
+export const FEATURE_LOAD_RESOURCE = 'fe-load-resource'
+
+export const VERSION = 'version'

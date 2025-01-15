@@ -1,9 +1,9 @@
 on: [push]
 
 jobs:
-  test_flagship_cli:
+  test_abtasty_cli:
     runs-on: ubuntu-latest
-    name: A job Test Flagship CLI in CI
+    name: A job Test AB Tasty CLI in CI
     steps:
       # To use this repository's private action,
       # you must check out the repository
@@ -11,22 +11,29 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Configuration
-        uses: ./ # Uses an action in the root directory
+        uses: ./
         id: config
         with:
-          create-configuration: |
-            name: configuration-name
+          run-shell: |
+            command: fe auth login -i
+          fe-login-auth: |
+            commandId: c1
+            username: configuration-name
             client-id: ${{secrets.CLIENT_ID}}
             client-secret: ${{secrets.CLIENT_SECRET}}
             account-id: ${{secrets.ACCOUNT_ID}}
-            account-environment-id: ${{secrets.ACCOUNT_ENV_ID}}
+            account-environment-id: ${{secrets.ACCOUNT_ENVIRONMENT_ID}}
 
-          use-configuration: |
-            name: configuration-name
+          fe-list-project: |
+            commandId: c2
 
-          list-flag: |
+          fe-load-resource: |
+            commandId: c3
+            file: file-example.json
+            input-params-file: input-example.json
             output-format: json
 
       - name: Get previous configuration step response
         continue-on-error: true
-        run: echo "${{ steps.config.outputs.COMMAND_RESPONSE}}"
+        run: |
+          echo "${{ steps.config.outputs.commandsResult}}"

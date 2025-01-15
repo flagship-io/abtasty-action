@@ -6,7 +6,7 @@ import { homedir } from 'os'
 import * as fs from 'fs'
 import { setError } from './error'
 
-export const CliVersion = '1.0.2'
+export const CliVersion = '1.2.0'
 export const actionVersion = '0.0.1'
 
 export class Cli {
@@ -17,7 +17,7 @@ export class Cli {
     return new Promise<{ stdout: string; stderr: string }>(
       (resolve, reject) => {
         exec(
-          command + ' --user-agent=flagship-ext-action/v' + actionVersion,
+          command + ' --user-agent=abtasty-ext-action/v' + actionVersion,
           options,
           (error, stdout, stderr) => {
             if (error) {
@@ -32,17 +32,17 @@ export class Cli {
 
   async CliBin(): Promise<string> {
     try {
-      const flagshipDir = 'flagship'
-      const flagshipDirWindows = '\\flagship'
+      const abtastyDir = 'abtasty-cli'
+      const abtastyDirWindows = '\\abtasty-cli'
 
       if (process.platform.toString() === 'win32') {
-        return `${flagshipDirWindows}\\${CliVersion}\\flagship.exe`
+        return `${abtastyDirWindows}\\${CliVersion}\\abtasty-cli.exe`
       }
       if (process.platform.toString() === 'darwin') {
-        return `${flagshipDir}/${CliVersion}/flagship`
+        return `${abtastyDir}/${CliVersion}/abtasty-cli`
       }
-      await fs.promises.access(join(flagshipDir, `${CliVersion}/flagship`))
-      return `${flagshipDir}/${CliVersion}/flagship`
+      await fs.promises.access(join(abtastyDir, `${CliVersion}/abtasty-cli`))
+      return `${abtastyDir}/${CliVersion}/abtasty-cli`
     } catch (err: any) {
       setError(`Error: ${err}`, false)
       return err.error
@@ -50,6 +50,7 @@ export class Cli {
   }
 
   async Resource(
+    product: string,
     resource: string,
     method?: string,
     args?: string
@@ -61,14 +62,17 @@ export class Cli {
       }
       const command =
         method === 'list'
-          ? `${cliBin} ${resource} ${method} ${args}`
-          : `${cliBin} ${resource} ${method} ${args} --output-format json`
+          ? `${cliBin} ${product} ${resource} ${method} ${args} --output-format json`
+          : `${cliBin} ${product} ${resource} ${method} ${args}`
+      console.log(command)
       const output = await this.exec(command, {})
+      console.log(output)
       if (output.stderr) {
-        return `error occured with command ${command}`
+        return `error occurred with command ${command}`
       }
       return output.stdout
     } catch (err: any) {
+      console.log(err)
       return err.toString()
     }
   }

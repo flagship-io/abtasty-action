@@ -8,8 +8,8 @@ import { setError } from 'src/error'
 import decompress from 'decompress'
 
 export async function CliDownloader(binaryDir: string) {
-  const flagshipDir = 'flagship'
-  const cliTar = `flagship/flagship-${CliVersion}.tar.gz`
+  const abtastyDir = 'abtasty-cli'
+  const cliTar = `abtasty-cli/abtasty-cli-${CliVersion}.tar.gz`
 
   async function installDir(): Promise<void> {
     let platform = process.platform.toString()
@@ -18,8 +18,8 @@ export async function CliDownloader(binaryDir: string) {
     const file = fs.createWriteStream(cliTar)
     const unzip = createGunzip()
 
-    if (!fs.existsSync(flagshipDir)) {
-      fs.mkdirSync(flagshipDir)
+    if (!fs.existsSync(abtastyDir)) {
+      fs.mkdirSync(abtastyDir)
     }
     if (!fs.existsSync(binaryDir)) {
       fs.mkdirSync(binaryDir)
@@ -41,9 +41,9 @@ export async function CliDownloader(binaryDir: string) {
     }
 
     if (platform === 'darwin') {
-      cliUrl = `https://github.com/flagship-io/flagship/releases/download/v${CliVersion}/flagship_${CliVersion}_darwin_all.tar.gz`
+      cliUrl = `https://github.com/flagship-io/abtasty-cli/releases/download/v${CliVersion}/abtasty-cli_${CliVersion}_darwin_all.tar.gz`
     } else {
-      cliUrl = `https://github.com/flagship-io/flagship/releases/download/v${CliVersion}/flagship_${CliVersion}_${platform}_${arch}.tar.gz`
+      cliUrl = `https://github.com/flagship-io/abtasty-cli/releases/download/v${CliVersion}/abtasty-cli_${CliVersion}_${platform}_${arch}.tar.gz`
     }
 
     try {
@@ -60,7 +60,7 @@ export async function CliDownloader(binaryDir: string) {
       console.error(err)
     }
     await decompress(cliTar, binaryDir)
-    fs.chmodSync(`${binaryDir}/flagship`, '777')
+    fs.chmodSync(`${binaryDir}/abtasty-cli`, '777')
   }
 
   async function download(): Promise<void> {
