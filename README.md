@@ -75,17 +75,17 @@ jobs:
 
 ### Inputs
 
-| Input Name          | Required | Default Value | Description                                                                                                                        |
-| ------------------- | -------- | ------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| `fe-login-auth`     | Yes      | `N/A`         | Feature experimentation: [Login & authenticate](https://docs.developers.flagship.io/docs/feature-experimentation-authentication#/) |
-| `fe-load-resource`  | No       | `N/A`         | [Load resources](https://docs.developers.flagship.io/docs/feature-experimentation-resource#/) from your file                       |
-| `fe-list-flag`      | No       | `N/A`         | List flags                                                                                                                         |
-| `fe-list-campaign`  | No       | `N/A`         | List campaigns                                                                                                                     |
-| `fe-list-project`   | No       | `N/A`         | List projects                                                                                                                      |
-| `fe-list-goal:`     | No       | `N/A`         | List goals                                                                                                                         |
-| `fe-list-tk`        | No       | `N/A`         | List targeting keys                                                                                                                |
-| `fe-list-vg`        | No       | `N/A`         | List variation groups                                                                                                              |
-| `fe-list-variation` | No       | `N/A`         | List variations                                                                                                                    |
+| Input Name          | Required | Default Value | Description                                                                                                                           |
+| ------------------- | -------- | ------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| `fe-login-auth`     | Yes      | `N/A`         | Feature experimentation: [Login & authenticate](https://docs.developers.flagship.io/docs/feature-experimentation-authentication#/)    |
+| `fe-load-resource`  | No       | `N/A`         | Feature experimentation: [Load resources](https://docs.developers.flagship.io/docs/feature-experimentation-resource#/) from your file |
+| `fe-list-flag`      | No       | `N/A`         | Feature experimentation: List flags                                                                                                   |
+| `fe-list-campaign`  | No       | `N/A`         | Feature experimentation: List campaigns                                                                                               |
+| `fe-list-project`   | No       | `N/A`         | Feature experimentation: List projects                                                                                                |
+| `fe-list-goal:`     | No       | `N/A`         | Feature experimentation: List goals                                                                                                   |
+| `fe-list-tk`        | No       | `N/A`         | Feature experimentation: List targeting keys                                                                                          |
+| `fe-list-vg`        | No       | `N/A`         | Feature experimentation: List variation groups                                                                                        |
+| `fe-list-variation` | No       | `N/A`         | Feature experimentation: List variations                                                                                              |
 
 ### Outputs
 
