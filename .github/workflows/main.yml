@@ -29,8 +29,8 @@ jobs:
 
           fe-load-resource: |
             commandId: c3
-            file: file-example.json
-            input-params-file: input-example.json
+            file: resource-loader-templates/file-example.json
+            input-params-file: resource-loader-templates/input-params-file-example.json
             output-format: json
 
       - name: Get previous configuration step response

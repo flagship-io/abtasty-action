@@ -3,7 +3,7 @@ import * as fs from 'fs'
 import { join } from 'path'
 import { setError } from './error'
 
-export const CliVersion = '1.2.0'
+export const CliVersion = '1.2.1'
 export const actionVersion = '0.0.1'
 
 export class Cli {

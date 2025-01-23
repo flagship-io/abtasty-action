@@ -145,21 +145,8 @@ export async function run(): Promise<void> {
     const abtastyDir = 'abtasty-cli'
     const binaryDir = `${abtastyDir}/${CliVersion}`
     const internalABTastyDir = '/home/runner/.abtasty'
-    //const internalFlagshipDir = '.flagship'
 
     var cliResponse = {}
-
-    /*     if (!fs.existsSync(internalFlagshipDir)) {
-      fs.mkdirSync(internalFlagshipDir)
-    }
-
-    fs.chmodSync(`${internalFlagshipDir}`, '777')
-
-    if (!fs.existsSync(internalConfigutations)) {
-      fs.mkdirSync(internalConfigutations)
-    }
-
-    fs.chmodSync(`${internalConfigutations}`, '777') */
 
     if (!fs.existsSync(binaryDir)) {
       await CliDownloader(binaryDir)
