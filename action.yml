@@ -6,7 +6,7 @@ author: 'Chadi LAOULAOU <chadiii> | AB Tasty'
 inputs:
   fe-login-auth:
     description: 'Feature experimentation: Login authentication'
-    required: false
+    required: true
 
   fe-load-resource:
     description: 'Feature experimentation: Load resource'

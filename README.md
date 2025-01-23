@@ -1,199 +1,208 @@
-# Create a JavaScript Action Using TypeScript
+# GitHub Action - AB Tasty action
 
-[![GitHub Super-Linter](https://github.com/actions/typescript-action/actions/workflows/linter.yml/badge.svg)](https://github.com/super-linter/super-linter)
-![CI](https://github.com/actions/typescript-action/actions/workflows/ci.yml/badge.svg)
+| :exclamation: We only support Feature Experimentation (For now) |
+| --------------------------------------------------------------- |
 
-Use this template to bootstrap the creation of a TypeScript action. :rocket:
+This repository contains a custom GitHub Action designed to create and manage
+your AB Tasty resources for feature experimentation and web experimentation
+products such as projects, campaigns, teams, etc... You can use these commands
+to perform common AB Tasty platform actions from your terminal or through
+scripts and other automation.
 
-This template includes compilation support, tests, a validation workflow,
-publishing, and versioning guidance.
+Our Github Action is built on top of our CLI, enabling you to use resource
+loader to batch your processes.
 
-If you are new, there's also a simpler introduction in the
-[Hello world JavaScript action repository](https://github.com/actions/hello-world-javascript-action).
+For example, you can use the AB Tasty Action to manage :
 
-## Create Your Own Action
+Feature experimentation: Projects, campaigns, flags, targeting keys, goals,
+etc...
 
-To create your own action, you can use this repository as a template! Just
-follow the below instructions:
+## Features
 
-1. Click the **Use this template** button at the top of the repository
-1. Select **Create a new repository**
-1. Select an owner and name for your new repository
-1. Click **Create repository**
-1. Clone your new repository
-
-## Initial Setup
-
-After you've cloned the repository to your local machine or codespace, you'll
-need to perform some initial setup steps before you can develop your action.
-
-> [!NOTE]
->
-> You'll need to have a reasonably modern version of
-> [Node.js](https://nodejs.org) handy. If you are using a version manager like
-> [`nodenv`](https://github.com/nodenv/nodenv) or
-> [`nvm`](https://github.com/nvm-sh/nvm), you can run `nodenv install` in the
-> root of your repository to install the version specified in
-> [`package.json`](./package.json). Otherwise, 20.x or later should work!
-
-1. :hammer_and_wrench: Install the dependencies
-
-   ```bash
-   npm install
-   ```
-
-1. :building_construction: Package the TypeScript for distribution
-
-   ```bash
-   npm run bundle
-   ```
-
-1. :white_check_mark: Run the tests
-
-   ```bash
-   $ npm test
-
-   PASS  ./index.test.js
-     ✓ throws invalid number (3ms)
-     ✓ wait 500 ms (504ms)
-     ✓ test runs (95ms)
-
-   ...
-   ```
-
-## Update the Action Metadata
-
-The [`action.yml`](action.yml) file defines metadata about your action, such as
-input(s) and output(s). For details about this file, see
-[Metadata syntax for GitHub Actions](https://docs.github.com/en/actions/creating-actions/metadata-syntax-for-github-actions).
-
-When you copy this repository, update `action.yml` with the name, description,
-inputs, and outputs for your action.
-
-## Update the Action Code
-
-The [`src/`](./src/) directory is the heart of your action! This contains the
-source code that will be run when your action is invoked. You can replace the
-contents of this directory with your own code.
-
-There are a few things to keep in mind when writing your action code:
-
-- Most GitHub Actions toolkit and CI/CD operations are processed asynchronously.
-  In `main.ts`, you will see that the action is run in an `async` function.
-
-  ```javascript
-  import * as core from '@actions/core'
-  //...
-
-  async function run() {
-    try {
-      //...
-    } catch (error) {
-      core.setFailed(error.message)
-    }
-  }
-  ```
-
-  For more information about the GitHub Actions toolkit, see the
-  [documentation](https://github.com/actions/toolkit/blob/master/README.md).
-
-So, what are you waiting for? Go ahead and start customizing your action!
-
-1. Create a new branch
-
-   ```bash
-   git checkout -b releases/v1
-   ```
-
-1. Replace the contents of `src/` with your action code
-1. Add tests to `__tests__/` for your source code
-1. Format, test, and build the action
-
-   ```bash
-   npm run all
-   ```
-
-   > [!WARNING]
-   >
-   > This step is important! It will run [`ncc`](https://github.com/vercel/ncc)
-   > to build the final JavaScript action code with all dependencies included.
-   > If you do not run this step, your action will not work correctly when it is
-   > used in a workflow. This step also includes the `--license` option for
-   > `ncc`, which will create a license file for all of the production node
-   > modules used in your project.
-
-1. Commit your changes
-
-   ```bash
-   git add .
-   git commit -m "My first action is ready!"
-   ```
-
-1. Push them to your repository
-
-   ```bash
-   git push -u origin releases/v1
-   ```
-
-1. Create a pull request and get feedback on your action
-1. Merge the pull request into the `main` branch
-
-Your action is now published! :rocket:
-
-For information about versioning your action, see
-[Versioning](https://github.com/actions/toolkit/blob/master/docs/action-versioning.md)
-in the GitHub Actions toolkit.
-
-## Validate the Action
-
-You can now validate the action by referencing it in a workflow file. For
-example, [`ci.yml`](./.github/workflows/ci.yml) demonstrates how to reference an
-action in the same repository.
-
-```yaml
-steps:
-  - name: Checkout
-    id: checkout
-    uses: actions/checkout@v3
-
-  - name: Test Local Action
-    id: test-action
-    uses: ./
-    with:
-      milliseconds: 1000
-
-  - name: Print Output
-    id: output
-    run: echo "${{ steps.test-action.outputs.time }}"
-```
-
-For example workflow runs, check out the
-[Actions tab](https://github.com/actions/typescript-action/actions)! :rocket:
+- Feature Experimentation:
+  - [Login & authenticate](https://docs.developers.flagship.io/docs/feature-experimentation-authentication#/)
+  - List resources: project, campaign, variation group, variation, targeting
+    key, goal
+  - [Load resource](https://docs.developers.flagship.io/docs/feature-experimentation-resource#/)
 
 ## Usage
 
-After testing, you can create version tag(s) that developers can use to
-reference different stable versions of your action. For more information, see
-[Versioning](https://github.com/actions/toolkit/blob/master/docs/action-versioning.md)
-in the GitHub Actions toolkit.
+### Prerequisites
 
-To include the action in a workflow in another repository, you can use the
-`uses` syntax with the `@` symbol to reference a specific branch, tag, or commit
-hash.
+Make sure you have the following set up before using this action:
+
+- A GitHub repository
+- Necessary permissions or secrets added to your repository
+
+### Basic Example
+
+Add the following to your workflow YAML file (e.g.,
+`.github/workflows/your-workflow.yml`):
+
+```yaml
+name: Load resource to Feature experimentation workflow
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  load-resources:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Run Your Action
+        uses: flagship-io/abtasty-action@v0.1
+        with:
+          fe-login-auth: |
+            commandId: c1
+            username: configuration-name
+            client-id: ${{secrets.CLIENT_ID}}
+            client-secret: ${{secrets.CLIENT_SECRET}}
+            account-id: ${{secrets.ACCOUNT_ID}}
+            account-environment-id: ${{secrets.ACCOUNT_ENVIRONMENT_ID}}
+
+          fe-load-resource: |
+            commandId: c2
+            file: resource-loader-templates/file-example.json
+            input-params-file: resource-loader-templates/input-params-file-example.json
+            output-format: json
+```
+
+### Inputs
+
+| Input Name          | Required | Default Value | Description                                                                                                                        |
+| ------------------- | -------- | ------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| `fe-login-auth`     | Yes      | `N/A`         | Feature experimentation: [Login & authenticate](https://docs.developers.flagship.io/docs/feature-experimentation-authentication#/) |
+| `fe-load-resource`  | No       | `N/A`         | [Load resources](https://docs.developers.flagship.io/docs/feature-experimentation-resource#/) from your file                       |
+| `fe-list-flag`      | No       | `N/A`         | List flags                                                                                                                         |
+| `fe-list-campaign`  | No       | `N/A`         | List campaigns                                                                                                                     |
+| `fe-list-project`   | No       | `N/A`         | List projects                                                                                                                      |
+| `fe-list-goal:`     | No       | `N/A`         | List goals                                                                                                                         |
+| `fe-list-tk`        | No       | `N/A`         | List targeting keys                                                                                                                |
+| `fe-list-vg`        | No       | `N/A`         | List variation groups                                                                                                              |
+| `fe-list-variation` | No       | `N/A`         | List variations                                                                                                                    |
+
+### Outputs
+
+| Output Name      | Description        |
+| ---------------- | ------------------ |
+| `commandsResult` | Result of CLI flow |
+
+---
+
+## Secrets
+
+If your action requires secrets, add them to your repository under **Settings >
+Secrets and variables > Actions**.
+
+| Secret Name              | Description            |
+| ------------------------ | ---------------------- |
+| `CLIENT_ID`              | Client ID              |
+| `CLIENT_SECRET`          | Client Secret          |
+| `ACCOUNT_ID`             | Account ID             |
+| `ACCOUNT_ENVIRONMENT_ID` | Account environment ID |
+
+---
+
+## Example Scenarios
+
+### Example 1: List project
 
 ```yaml
 steps:
-  - name: Checkout
-    id: checkout
-    uses: actions/checkout@v3
-
-  - name: Test Local Action
-    id: test-action
-    uses: actions/typescript-action@v1 # Commit with the `v1` tag
+  - name: List Project
+    uses: flagship-io/abtasty-action@v0.1
     with:
-      milliseconds: 1000
+      fe-login-auth: |
+        commandId: c1
+        username: configuration-name
+        client-id: ${{secrets.CLIENT_ID}}
+        client-secret: ${{secrets.CLIENT_SECRET}}
+        account-id: ${{secrets.ACCOUNT_ID}}
+        account-environment-id: ${{secrets.ACCOUNT_ENVIRONMENT_ID}}
 
-  - name: Print Output
-    id: output
-    run: echo "${{ steps.test-action.outputs.time }}"
+      fe-list-project: |
+        commandId: c2
 ```
+
+### Example 2: Load resources
+
+```yaml
+steps:
+  - name: Load resources
+    uses: flagship-io/abtasty-action@v0.1
+    with:
+      fe-login-auth: |
+        commandId: c1
+        username: configuration-name
+        client-id: ${{secrets.CLIENT_ID}}
+        client-secret: ${{secrets.CLIENT_SECRET}}
+        account-id: ${{secrets.ACCOUNT_ID}}
+        account-environment-id: ${{secrets.ACCOUNT_ENVIRONMENT_ID}}
+
+      fe-load-resource: |
+        commandId: c2
+        file: resource-loader-templates/file-example.json
+        input-params-file: resource-loader-templates/input-params-file-example.json
+        output-format: json
+```
+
+---
+
+## Development
+
+### Testing Locally
+
+1. Clone this repository:
+   ```bash
+   git clone https://github.com/flagship-io/abtasty-action.git
+   ```
+2. Make your changes and commit them.
+3. Test the action locally using [act](https://github.com/nektos/act) or a
+   similar tool.
+
+### Building the Action
+
+If your action uses a compiled language or requires packaging:
+
+```bash
+npm install && npm run build
+```
+
+If you set up [act](https://github.com/nektos/act):
+
+```bash
+make act
+```
+
+---
+
+## Contributing
+
+Contributions are welcome! Please follow these steps:
+
+1. Fork the repository.
+2. Create a new branch for your feature or bugfix.
+3. Submit a pull request.
+
+---
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
+
+---
+
+## Acknowledgments
+
+- [AB Tasty CLI](https://docs.developers.flagship.io/docs/abtasty-command-line-interface#/)
+- [Create custom action](https://docs.github.com/en/actions/sharing-automations/creating-actions/creating-a-javascript-action)
+
+---
+
+For questions or support, open an issue or contact flagship@abtasty.com.
