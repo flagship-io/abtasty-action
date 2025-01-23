@@ -1,12 +1,9 @@
-import * as core from '@actions/core'
-import * as github from '@actions/github'
 import { exec, ExecOptions } from 'child_process'
-import { join } from 'path'
-import { homedir } from 'os'
 import * as fs from 'fs'
+import { join } from 'path'
 import { setError } from './error'
 
-export const CliVersion = '1.0' // 'v' in v0.7.3 is added in download url
+export const CliVersion = '1.2.1'
 export const actionVersion = '0.0.1'
 
 export class Cli {
@@ -17,7 +14,7 @@ export class Cli {
     return new Promise<{ stdout: string; stderr: string }>(
       (resolve, reject) => {
         exec(
-          command + ' --user-agent=flagship-ext-action/v' + actionVersion,
+          command + ' --user-agent=abtasty-ext-action/v' + actionVersion,
           options,
           (error, stdout, stderr) => {
             if (error) {
@@ -32,17 +29,17 @@ export class Cli {
 
   async CliBin(): Promise<string> {
     try {
-      const flagshipDir = 'flagship'
-      const flagshipDirWindows = '\\flagship'
+      const abtastyDir = 'abtasty-cli'
+      const abtastyDirWindows = '\\abtasty-cli'
 
       if (process.platform.toString() === 'win32') {
-        return `${flagshipDirWindows}\\${CliVersion}\\flagship.exe`
+        return `${abtastyDirWindows}\\${CliVersion}\\abtasty-cli.exe`
       }
       if (process.platform.toString() === 'darwin') {
-        return `${flagshipDir}/${CliVersion}/flagship`
+        return `${abtastyDir}/${CliVersion}/abtasty-cli`
       }
-      await fs.promises.access(join(flagshipDir, `${CliVersion}/flagship`))
-      return `${flagshipDir}/${CliVersion}/flagship`
+      await fs.promises.access(join(abtastyDir, `${CliVersion}/abtasty-cli`))
+      return `${abtastyDir}/${CliVersion}/abtasty-cli`
     } catch (err: any) {
       setError(`Error: ${err}`, false)
       return err.error
@@ -50,41 +47,30 @@ export class Cli {
   }
 
   async Resource(
+    product: string,
     resource: string,
     method?: string,
-    flags?: string
+    args?: string
   ): Promise<string> {
     try {
       const cliBin = await this.CliBin()
       if (!cliBin) {
         return ''
       }
-      const command = `${cliBin} ${resource} ${method} ${flags?.replaceAll(',', ' ')} --output-format json`
+      const command =
+        method === 'list'
+          ? `${cliBin} ${product} ${resource} ${method} ${args} --output-format json`
+          : `${cliBin} ${product} ${resource} ${method} ${args}`
+      console.log(command)
       const output = await this.exec(command, {})
+      console.log(output)
       if (output.stderr) {
-        return ''
-      }
-      return JSON.stringify(output.stdout)
-    } catch (err: any) {
-      return err.toString()
-    }
-  }
-
-  async Version(): Promise<string> {
-    try {
-      const cliBin = await this.CliBin()
-      if (!cliBin) {
-        setError(`Error: binary not found`, false)
-      }
-      const command = `${cliBin} version`
-      const output = await this.exec(command, {})
-      if (output.stderr) {
-        setError(`Error: ${output.stderr}`, false)
+        return `error occurred with command ${command}`
       }
       return output.stdout
     } catch (err: any) {
-      setError(`Error: ${err}`, false)
-      return ''
+      console.log(err)
+      return err.toString()
     }
   }
 }

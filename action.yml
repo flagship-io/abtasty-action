@@ -1,24 +1,51 @@
-name: 'Flagship'
-description: 'Flagship CLI in github action'
+name: 'AB Tasty'
+description: 'AB Tasty CLI in github action'
 author: 'Chadi LAOULAOU <chadiii> | AB Tasty'
 
 # Define your inputs here.
 inputs:
-  resource:
-    description: 'Flagship resource'
-    required: true
-  
-  method:
-    description: 'method for the resource'
-    required: false
-  
-  flags:
-    description: 'flags for the method'
+  fe-login-auth:
+    description: 'Feature experimentation: Login authentication'
     required: false
 
+  fe-load-resource:
+    description: 'Feature experimentation: Load resource'
+    required: false
+  
+  fe-list-flag:
+    description: 'Feature experimentation: List flag'
+    required: false
+
+  fe-list-campaign:
+    description: 'Feature experimentation: List campaign'
+    required: false
+  
+  fe-list-project:
+    description: 'Feature experimentation: List project'
+    required: false
+  
+  fe-list-goal:
+    description: 'Feature experimentation: List goal'
+    required: false
+  
+  fe-list-tk:
+    description: 'Feature experimentation: List targeting key'
+    required: false
+  
+  fe-list-vg:
+    description: 'Feature experimentation: List variation group'
+    required: false
+  
+  fe-list-variation:
+    description: 'Feature experimentation: List variation'
+    required: false
+  
+  version:
+    description: 'AB Tasty: Version'
+    required: false
 # Define your outputs here.
 outputs:
-  COMMAND_RESPONSE:
+  commandsResult:
     description: 'result of the cli'
 
 runs:

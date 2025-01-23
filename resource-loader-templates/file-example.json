@@ -1,0 +1,150 @@
+{
+    "resources": [
+        {
+            "name": "project",
+            "resourceVariable": "p1",
+            "method": "create",
+            "data": {
+                "name": "Progressive rollout and AB Project"
+            }
+        },
+        {
+            "name": "campaign",
+            "resourceVariable": "c1",
+            "method": "create",
+            "data": {
+                "name": "$c2.name",
+                "description": "tag release demo for github action",
+                "project_id": "$p1.id",
+                "type": "deployment",
+                "variation_groups": [
+                    {
+                        "name": "Scenario",
+                        "variations": [
+                            {
+                                "name": "Modification",
+                                "reference": false,
+                                "allocation": 100,
+                                "modifications": {
+                                    "type": "FLAG",
+                                    "value": {
+                                        "IsReleased": {
+                                            "type": "boolean",
+                                            "value": true
+                                        },
+                                        "tag-release": {
+                                            "type": "string",
+                                            "value": "dymanic-git-tag-version"
+                                        }
+                                    }
+                                }
+                            }
+                        ],
+                        "targeting": {
+                            "targeting_groups": [
+                                {
+                                    "targetings": [
+                                        {
+                                            "key": "release-version",
+                                            "operator": "EQUALS",
+                                            "value": "Array"
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        "allocation_config": {
+                            "start_date": "2025-01-11 10:00:18",
+                            "timezone": "Europe/Paris",
+                            "start_allocation": 0.0,
+                            "periodic_steps": {
+                                "allocation": 33.0,
+                                "step": 1,
+                                "step_type": "hour"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "name": "campaign",
+            "method": "switch",
+            "data": {
+                "id": "$c1.id",
+                "state": "active"
+            }
+        },
+        {
+            "name": "campaign",
+            "method": "create",
+            "resourceVariable": "c2",
+            "data": {
+                "project_id": "$p1.id",
+                "name": "Demo Usecase",
+                "description": "extension test",
+                "type": "ab",
+                "variation_groups": [
+                    {
+                        "name": "Default",
+                        "variations": [
+                            {
+                                "name": "Original",
+                                "reference": true,
+                                "allocation": 34,
+                                "modifications": {
+                                    "type": "FLAG",
+                                    "value": {
+                                        "tag-release": {
+                                            "type": "string",
+                                            "value": "0.0.2"
+                                        }
+                                    }
+                                }
+                            },
+                            {
+                                "name": "Variation 1",
+                                "reference": false,
+                                "allocation": 66,
+                                "modifications": {
+                                    "type": "FLAG",
+                                    "value": {
+                                        "feature_payment_applePay_enable": {
+                                            "type": "boolean",
+                                            "value": true
+                                        },
+                                        "tag-release": {
+                                            "type": "string",
+                                            "value": "0.0.1"
+                                        }
+                                    }
+                                }
+                            }
+                        ],
+                        "targeting": {
+                            "targeting_groups": [
+                                {
+                                    "targetings": [
+                                        {
+                                            "key": "osName",
+                                            "operator": "EQUALS",
+                                            "value": "Array"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "name": "campaign",
+            "method": "switch",
+            "data": {
+                "id": "$c2.id",
+                "state": "active"
+            }
+        }
+    ]
+}

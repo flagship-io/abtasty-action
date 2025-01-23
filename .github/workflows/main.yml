@@ -1,43 +1,39 @@
 on: [push]
 
 jobs:
-  test_flagship_cli:
+  test_abtasty_cli:
     runs-on: ubuntu-latest
-    name: A job Test Flagship CLI in CI
+    name: A job Test AB Tasty CLI in CI
     steps:
       # To use this repository's private action,
       # you must check out the repository
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Check CLI version
-        uses: ./ # Uses an action in the root directory
-        id: version
-        with:
-          resource: version
-
-      - name: Get previous version step response
-        run: echo "${{steps.version.outputs.COMMAND_RESPONSE}}"
-
       - name: Configuration
-        uses: ./ # Uses an action in the root directory
+        uses: ./
         id: config
         with:
-          resource: 'configuration'
-          method: 'create'
-          flags: '-n,config-name,-i,ciAction,-s,csAction,-a,aAction,-e,eAction'
+          run-shell: |
+            command: fe auth login -i
+          fe-login-auth: |
+            commandId: c1
+            username: configuration-name
+            client-id: ${{secrets.CLIENT_ID}}
+            client-secret: ${{secrets.CLIENT_SECRET}}
+            account-id: ${{secrets.ACCOUNT_ID}}
+            account-environment-id: ${{secrets.ACCOUNT_ENVIRONMENT_ID}}
 
-      - name: Get previous configurationstep response
+          fe-list-project: |
+            commandId: c2
+
+          fe-load-resource: |
+            commandId: c3
+            file: resource-loader-templates/file-example.json
+            input-params-file: resource-loader-templates/input-params-file-example.json
+            output-format: json
+
+      - name: Get previous configuration step response
         continue-on-error: true
-        run: echo "${{ steps.config.outputs.COMMAND_RESPONSE}}"
-
-      - name: List Configurations
-        uses: ./ # Uses an action in the root directory
-        id: list-config
-        with:
-          resource: 'configuration'
-          method: 'list'
-
-      - name: Get previous configurationstep response
-        continue-on-error: true
-        run: echo "${{ steps.list-config.outputs.COMMAND_RESPONSE}}"
+        run: |
+          echo "${{ steps.config.outputs.commandsResult}}"

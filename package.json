@@ -1,16 +1,16 @@
 {
-  "name": "flagship-action",
+  "name": "abtasty-action",
   "description": "GitHub Actions TypeScript template",
   "version": "0.0.0",
   "author": "",
   "private": true,
-  "homepage": "https://github.com/flagship-io/flagship-action",
+  "homepage": "https://github.com/flagship-io/abtasty-action",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/flagship-io/flagship-action.git"
+    "url": "git+https://github.com/flagship-io/abtasty-action.git"
   },
   "bugs": {
-    "url": "https://github.com/flagship-io/flagship-action/issues"
+    "url": "https://github.com/flagship-io/abtasty-action/issues"
   },
   "keywords": [
     "actions",

@@ -39680,12 +39680,12 @@ const child_process_1 = __nccwpck_require__(2081);
 const path_1 = __nccwpck_require__(1017);
 const fs = __importStar(__nccwpck_require__(7147));
 const error_1 = __nccwpck_require__(6388);
-exports.CliVersion = '1.0'; // 'v' in v0.7.3 is added in download url
+exports.CliVersion = '1.2.0';
 exports.actionVersion = '0.0.1';
 class Cli {
     exec(command, options) {
         return new Promise((resolve, reject) => {
-            (0, child_process_1.exec)(command + ' --user-agent=flagship-ext-action/v' + exports.actionVersion, options, (error, stdout, stderr) => {
+            (0, child_process_1.exec)(command + ' --user-agent=abtasty-ext-action/v' + exports.actionVersion, options, (error, stdout, stderr) => {
                 if (error) {
                     reject({ error, stdout, stderr });
                 }
@@ -39695,55 +39695,42 @@ class Cli {
     }
     async CliBin() {
         try {
-            const flagshipDir = 'flagship';
-            const flagshipDirWindows = '\\flagship';
+            const abtastyDir = 'abtasty-cli';
+            const abtastyDirWindows = '\\abtasty-cli';
             if (process.platform.toString() === 'win32') {
-                return `${flagshipDirWindows}\\${exports.CliVersion}\\flagship.exe`;
+                return `${abtastyDirWindows}\\${exports.CliVersion}\\abtasty-cli.exe`;
             }
             if (process.platform.toString() === 'darwin') {
-                return `${flagshipDir}/${exports.CliVersion}/flagship`;
+                return `${abtastyDir}/${exports.CliVersion}/abtasty-cli`;
             }
-            await fs.promises.access((0, path_1.join)(flagshipDir, `${exports.CliVersion}/flagship`));
-            return `${flagshipDir}/${exports.CliVersion}/flagship`;
+            await fs.promises.access((0, path_1.join)(abtastyDir, `${exports.CliVersion}/abtasty-cli`));
+            return `${abtastyDir}/${exports.CliVersion}/abtasty-cli`;
         }
         catch (err) {
             (0, error_1.setError)(`Error: ${err}`, false);
             return err.error;
         }
     }
-    async Resource(resource, method, flags) {
+    async Resource(product, resource, method, args) {
         try {
             const cliBin = await this.CliBin();
             if (!cliBin) {
                 return '';
             }
-            const command = `${cliBin} ${resource} ${method} ${flags?.replaceAll(',', ' ')} --output-format json`;
+            const command = method === 'list'
+                ? `${cliBin} ${product} ${resource} ${method} ${args} --output-format json`
+                : `${cliBin} ${product} ${resource} ${method} ${args}`;
+            console.log(command);
             const output = await this.exec(command, {});
+            console.log(output);
             if (output.stderr) {
-                return '';
-            }
-            return JSON.stringify(output.stdout);
-        }
-        catch (err) {
-            return err.toString();
-        }
-    }
-    async Version() {
-        try {
-            const cliBin = await this.CliBin();
-            if (!cliBin) {
-                (0, error_1.setError)(`Error: binary not found`, false);
-            }
-            const command = `${cliBin} version`;
-            const output = await this.exec(command, {});
-            if (output.stderr) {
-                (0, error_1.setError)(`Error: ${output.stderr}`, false);
+                return `error occurred with command ${command}`;
             }
             return output.stdout;
         }
         catch (err) {
-            (0, error_1.setError)(`Error: ${err}`, false);
-            return '';
+            console.log(err);
+            return err.toString();
         }
     }
 }
@@ -39791,16 +39778,16 @@ const zlib_1 = __nccwpck_require__(9796);
 const cliCommand_1 = __nccwpck_require__(8344);
 const decompress_1 = __importDefault(__nccwpck_require__(9350));
 async function CliDownloader(binaryDir) {
-    const flagshipDir = 'flagship';
-    const cliTar = `flagship/flagship-${cliCommand_1.CliVersion}.tar.gz`;
+    const abtastyDir = 'abtasty-cli';
+    const cliTar = `abtasty-cli/abtasty-cli-${cliCommand_1.CliVersion}.tar.gz`;
     async function installDir() {
         let platform = process.platform.toString();
         let cliUrl;
         let arch;
         const file = fs.createWriteStream(cliTar);
         const unzip = (0, zlib_1.createGunzip)();
-        if (!fs.existsSync(flagshipDir)) {
-            fs.mkdirSync(flagshipDir);
+        if (!fs.existsSync(abtastyDir)) {
+            fs.mkdirSync(abtastyDir);
         }
         if (!fs.existsSync(binaryDir)) {
             fs.mkdirSync(binaryDir);
@@ -39819,10 +39806,10 @@ async function CliDownloader(binaryDir) {
                 arch = process.arch;
         }
         if (platform === 'darwin') {
-            cliUrl = `https://github.com/flagship-io/flagship/releases/download/v${cliCommand_1.CliVersion}/flagship_${cliCommand_1.CliVersion}_darwin_all.tar.gz`;
+            cliUrl = `https://github.com/flagship-io/abtasty-cli/releases/download/v${cliCommand_1.CliVersion}/abtasty-cli_${cliCommand_1.CliVersion}_darwin_all.tar.gz`;
         }
         else {
-            cliUrl = `https://github.com/flagship-io/flagship/releases/download/v${cliCommand_1.CliVersion}/flagship_${cliCommand_1.CliVersion}_${platform}_${arch}.tar.gz`;
+            cliUrl = `https://github.com/flagship-io/abtasty-cli/releases/download/v${cliCommand_1.CliVersion}/abtasty-cli_${cliCommand_1.CliVersion}_${platform}_${arch}.tar.gz`;
         }
         try {
             const archivedCLI = await axios_1.default.get(cliUrl, {
@@ -39839,7 +39826,7 @@ async function CliDownloader(binaryDir) {
             console.error(err);
         }
         await (0, decompress_1.default)(cliTar, binaryDir);
-        fs.chmodSync(`${binaryDir}/flagship`, '777');
+        fs.chmodSync(`${binaryDir}/abtasty-cli`, '777');
     }
     async function download() {
         await installDir();
@@ -39847,6 +39834,27 @@ async function CliDownloader(binaryDir) {
     await download();
 }
 exports.CliDownloader = CliDownloader;
+
+
+/***/ }),
+
+/***/ 8032:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.VERSION = exports.FEATURE_LOAD_RESOURCE = exports.FEATURE_LIST_VARIATION = exports.FEATURE_LIST_VARIATION_GROUP = exports.FEATURE_LIST_TARGETING_KEY = exports.FEATURE_LIST_GOAL = exports.FEATURE_LIST_PROJECT = exports.FEATURE_LIST_CAMPAIGN = exports.FEATURE_LIST_FLAG = exports.FEATURE_LOGIN_AUTH = void 0;
+exports.FEATURE_LOGIN_AUTH = 'fe-login-auth';
+exports.FEATURE_LIST_FLAG = 'fe-list-flag';
+exports.FEATURE_LIST_CAMPAIGN = 'fe-list-campaign';
+exports.FEATURE_LIST_PROJECT = 'fe-list-project';
+exports.FEATURE_LIST_GOAL = 'fe-list-goal';
+exports.FEATURE_LIST_TARGETING_KEY = 'fe-list-tk';
+exports.FEATURE_LIST_VARIATION_GROUP = 'fe-list-vg';
+exports.FEATURE_LIST_VARIATION = 'fe-list-variation';
+exports.FEATURE_LOAD_RESOURCE = 'fe-load-resource';
+exports.VERSION = 'version';
 
 
 /***/ }),
@@ -39927,32 +39935,138 @@ const core = __importStar(__nccwpck_require__(2186));
 const fs = __importStar(__nccwpck_require__(7147));
 const cliCommand_1 = __nccwpck_require__(8344);
 const cliDownloader_1 = __nccwpck_require__(2698);
-/**
- * The main function for the action.
- * @returns {Promise<void>} Resolves when the action is complete.
- */
+const const_1 = __nccwpck_require__(8032);
+const buildInputs = () => {
+    var commandRequests = {};
+    const featureLoginAuth = core.getMultilineInput(const_1.FEATURE_LOGIN_AUTH);
+    if (core.getInput(const_1.FEATURE_LOGIN_AUTH)) {
+        commandRequests = {
+            ...commandRequests,
+            [const_1.FEATURE_LOGIN_AUTH]: featureLoginAuth
+        };
+    }
+    const featureListFlag = core.getMultilineInput(const_1.FEATURE_LIST_FLAG);
+    if (core.getInput(const_1.FEATURE_LIST_FLAG)) {
+        commandRequests = {
+            ...commandRequests,
+            [const_1.FEATURE_LIST_FLAG]: featureListFlag
+        };
+    }
+    const featureListCampaign = core.getMultilineInput(const_1.FEATURE_LIST_CAMPAIGN);
+    if (core.getInput(const_1.FEATURE_LIST_CAMPAIGN)) {
+        commandRequests = {
+            ...commandRequests,
+            [const_1.FEATURE_LIST_CAMPAIGN]: featureListCampaign
+        };
+    }
+    const featureListProject = core.getMultilineInput(const_1.FEATURE_LIST_PROJECT);
+    if (core.getInput(const_1.FEATURE_LIST_PROJECT)) {
+        commandRequests = {
+            ...commandRequests,
+            [const_1.FEATURE_LIST_PROJECT]: featureListProject
+        };
+    }
+    const featureListGoal = core.getMultilineInput(const_1.FEATURE_LIST_GOAL);
+    if (core.getInput(const_1.FEATURE_LIST_GOAL)) {
+        commandRequests = {
+            ...commandRequests,
+            [const_1.FEATURE_LIST_GOAL]: featureListGoal
+        };
+    }
+    const featureListTargetingKey = core.getMultilineInput(const_1.FEATURE_LIST_TARGETING_KEY);
+    if (core.getInput(const_1.FEATURE_LIST_TARGETING_KEY)) {
+        commandRequests = {
+            ...commandRequests,
+            [const_1.FEATURE_LIST_TARGETING_KEY]: featureListTargetingKey
+        };
+    }
+    const featureListVariationGroup = core.getMultilineInput(const_1.FEATURE_LIST_VARIATION_GROUP);
+    if (core.getInput(const_1.FEATURE_LIST_VARIATION_GROUP)) {
+        commandRequests = {
+            ...commandRequests,
+            [const_1.FEATURE_LIST_VARIATION_GROUP]: featureListVariationGroup
+        };
+    }
+    const featureListVariation = core.getMultilineInput(const_1.FEATURE_LIST_VARIATION);
+    if (core.getInput(const_1.FEATURE_LIST_VARIATION)) {
+        commandRequests = {
+            ...commandRequests,
+            [const_1.FEATURE_LIST_VARIATION]: featureListVariation
+        };
+    }
+    const featureLoadResource = core.getMultilineInput(const_1.FEATURE_LOAD_RESOURCE);
+    if (core.getInput(const_1.FEATURE_LOAD_RESOURCE)) {
+        commandRequests = {
+            ...commandRequests,
+            [const_1.FEATURE_LOAD_RESOURCE]: featureLoadResource
+        };
+    }
+    return commandRequests;
+};
+const buildCommands = (commandRequests) => {
+    var cliRequests = [];
+    for (const [key, value] of Object.entries(commandRequests)) {
+        var args = '';
+        var product = '';
+        var commandId = '';
+        value?.map((f) => {
+            var f_ = f.replaceAll(' ', '').split(':');
+            if (f_[0] == 'commandId') {
+                commandId = f_[1];
+                return;
+            }
+            args =
+                f_.length > 1
+                    ? args.concat(`--${f_[0]}=${f_[1]} `)
+                    : args.concat(`--${f_[0]} `);
+        });
+        const splitted = key.split('-');
+        cliRequests.push({
+            commandId,
+            product: splitted[0],
+            method: splitted[1],
+            resource: splitted[2],
+            flags: args
+        });
+    }
+    return cliRequests;
+};
 async function run() {
     try {
-        const flagshipDir = 'flagship';
-        const binaryDir = `${flagshipDir}/${cliCommand_1.CliVersion}`;
-        const internalFlagshipDir = '/home/runner/.flagship';
-        const internalConfigutations = `${internalFlagshipDir}/configurations`;
-        if (!fs.existsSync(internalFlagshipDir)) {
-            fs.mkdirSync(internalFlagshipDir);
+        const abtastyDir = 'abtasty-cli';
+        const binaryDir = `${abtastyDir}/${cliCommand_1.CliVersion}`;
+        const internalABTastyDir = '/home/runner/.abtasty';
+        //const internalFlagshipDir = '.flagship'
+        var cliResponse = {};
+        /*     if (!fs.existsSync(internalFlagshipDir)) {
+          fs.mkdirSync(internalFlagshipDir)
         }
-        fs.chmodSync(`${internalFlagshipDir}`, '777');
+    
+        fs.chmodSync(`${internalFlagshipDir}`, '777')
+    
         if (!fs.existsSync(internalConfigutations)) {
-            fs.mkdirSync(internalConfigutations);
+          fs.mkdirSync(internalConfigutations)
         }
-        fs.chmodSync(`${internalConfigutations}`, '777');
+    
+        fs.chmodSync(`${internalConfigutations}`, '777') */
         if (!fs.existsSync(binaryDir)) {
             await (0, cliDownloader_1.CliDownloader)(binaryDir);
         }
         const cli = new cliCommand_1.Cli();
-        const commandResponse = await cli.Resource(core.getInput('resource'), core.getInput('method'), core.getInput('flags'));
-        core.setOutput('COMMAND_RESPONSE', commandResponse);
+        const commandRequests = buildInputs();
+        const cliRequests = buildCommands(commandRequests);
+        for (const r of cliRequests) {
+            const result = await cli.Resource(r.product, r.resource, r.method, r.flags);
+            cliResponse = {
+                ...cliResponse,
+                [r.commandId]: result
+            };
+        }
+        core.setOutput('commandsResult', cliResponse);
     }
-    catch (err) { }
+    catch (err) {
+        console.log(err);
+    }
 }
 exports.run = run;
 
