@@ -1,11 +1,8 @@
-import * as fs from 'fs'
-import * as tar from 'tar-fs'
 import axios from 'axios'
-import { rimraf } from 'rimraf'
+import decompress from 'decompress'
+import * as fs from 'fs'
 import { createGunzip } from 'zlib'
 import { CliVersion } from './cliCommand'
-import { setError } from 'src/error'
-import decompress from 'decompress'
 
 export async function CliDownloader(binaryDir: string) {
   const abtastyDir = 'abtasty-cli'

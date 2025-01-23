@@ -1,9 +1,6 @@
-import * as core from '@actions/core'
-import * as github from '@actions/github'
 import { exec, ExecOptions } from 'child_process'
-import { join } from 'path'
-import { homedir } from 'os'
 import * as fs from 'fs'
+import { join } from 'path'
 import { setError } from './error'
 
 export const CliVersion = '1.2.0'
