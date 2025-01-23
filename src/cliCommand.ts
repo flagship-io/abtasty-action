@@ -7,18 +7,18 @@ export const CliVersion = '1.2.1'
 export const actionVersion = '0.0.1'
 
 export class Cli {
-  exec(
+  async exec(
     command: string,
     options: ExecOptions
   ): Promise<{ stdout: string; stderr: string }> {
     return new Promise<{ stdout: string; stderr: string }>(
       (resolve, reject) => {
         exec(
-          command + ' --user-agent=abtasty-ext-action/v' + actionVersion,
+          `${command} --user-agent=abtasty-ext-action/v${actionVersion}`,
           options,
           (error, stdout, stderr) => {
             if (error) {
-              reject({ error, stdout, stderr })
+              reject(new Error(error.message))
             }
             resolve({ stdout, stderr })
           }

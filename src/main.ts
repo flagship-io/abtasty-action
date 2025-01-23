@@ -27,7 +27,7 @@ type CliRequest = {
 }
 
 const buildInputs = () => {
-  var commandRequests = {}
+  let commandRequests = {}
   const featureLoginAuth = core.getMultilineInput(FEATURE_LOGIN_AUTH)
   if (core.getInput(FEATURE_LOGIN_AUTH)) {
     commandRequests = {
@@ -110,14 +110,13 @@ const buildInputs = () => {
 const buildCommands = (
   commandRequests: { [s: string]: any } | ArrayLike<any>
 ) => {
-  var cliRequests: CliRequest[] = []
+  const cliRequests: CliRequest[] = []
   for (const [key, value] of Object.entries(commandRequests)) {
-    var args: string = ''
-    var product: string = ''
-    var commandId: string = ''
+    let args = ''
+    let commandId = ''
     value?.map((f: string) => {
-      var f_ = f.replaceAll(' ', '').split(':')
-      if (f_[0] == 'commandId') {
+      const f_ = f.replaceAll(' ', '').split(':')
+      if (f_[0] === 'commandId') {
         commandId = f_[1]
         return
       }
@@ -144,9 +143,7 @@ export async function run(): Promise<void> {
   try {
     const abtastyDir = 'abtasty-cli'
     const binaryDir = `${abtastyDir}/${CliVersion}`
-    const internalABTastyDir = '/home/runner/.abtasty'
-
-    var cliResponse = {}
+    let cliResponse = {}
 
     if (!fs.existsSync(binaryDir)) {
       await CliDownloader(binaryDir)

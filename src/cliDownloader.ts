@@ -1,7 +1,6 @@
 import axios from 'axios'
 import decompress from 'decompress'
 import * as fs from 'fs'
-import { createGunzip } from 'zlib'
 import { CliVersion } from './cliCommand'
 
 export async function CliDownloader(binaryDir: string) {
@@ -13,7 +12,6 @@ export async function CliDownloader(binaryDir: string) {
     let cliUrl: string
     let arch: string
     const file = fs.createWriteStream(cliTar)
-    const unzip = createGunzip()
 
     if (!fs.existsSync(abtastyDir)) {
       fs.mkdirSync(abtastyDir)
