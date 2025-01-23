@@ -1,12 +1,11 @@
-on: [push]
+on:
+  workflow_dispatch:
 
 jobs:
-  test_abtasty_cli:
+  demo_abtasty_cli:
     runs-on: ubuntu-latest
     name: A job Test AB Tasty CLI in CI
     steps:
-      # To use this repository's private action,
-      # you must check out the repository
       - name: Checkout
         uses: actions/checkout@v4
 
@@ -14,8 +13,6 @@ jobs:
         uses: ./
         id: config
         with:
-          run-shell: |
-            command: fe auth login -i
           fe-login-auth: |
             commandId: c1
             username: configuration-name
