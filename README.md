@@ -56,7 +56,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Run Your Action
-        uses: flagship-io/abtasty-action@v0.2
+        uses: flagship-io/abtasty-action@v0.2.1
         with:
           fe-login-auth: |
             commandId: c1
@@ -116,7 +116,7 @@ Secrets and variables > Actions**.
 ```yaml
 steps:
   - name: List Project
-    uses: flagship-io/abtasty-action@v0.2
+    uses: flagship-io/abtasty-action@v0.2.1
     with:
       fe-login-auth: |
         commandId: c1
@@ -135,7 +135,7 @@ steps:
 ```yaml
 steps:
   - name: Load resources
-    uses: flagship-io/abtasty-action@v0.2
+    uses: flagship-io/abtasty-action@v0.2.1
     with:
       fe-login-auth: |
         commandId: c1
