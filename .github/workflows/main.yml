@@ -1,6 +1,10 @@
 on:
   workflow_dispatch:
 
+env:
+  ACTIONS_STEP_DEBUG: true
+  ACTIONS_RUNNER_DEBUG: true
+
 jobs:
   demo_abtasty_cli:
     runs-on: ubuntu-latest
