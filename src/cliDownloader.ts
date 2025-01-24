@@ -46,8 +46,10 @@ export async function CliDownloader(binaryDir: string) {
         responseType: 'arraybuffer',
         method: 'GET',
         headers: {
-          'Content-Type': 'application/gzip'
-        }
+          'Content-Type': 'application/gzip',
+          'Accept-Encoding': 'gzip,deflate,compress,br'
+        },
+        decompress: true
       })
       file.write(archivedCLI.data)
       file.end()

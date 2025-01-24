@@ -23,6 +23,7 @@ jobs:
 
           fe-list-project: |
             commandId: c2
+            output-format: json
 
           fe-load-resource: |
             commandId: c3
