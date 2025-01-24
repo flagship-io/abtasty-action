@@ -1,4 +1,3 @@
-import axios from 'axios'
 import decompress from 'decompress'
 import * as fs from 'fs'
 import { CliVersion } from './cliCommand'
@@ -42,15 +41,9 @@ export async function CliDownloader(binaryDir: string) {
     }
 
     try {
-      const archivedCLI = await axios.get(cliUrl, {
-        responseType: 'arraybuffer',
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/gzip',
-          'Accept-Encoding': '*'
-        }
-      })
-      file.write(archivedCLI.data)
+      const archivedCLI = await fetch(cliUrl)
+      const a = await archivedCLI.arrayBuffer()
+      file.write(new Uint8Array(a))
       file.end()
     } catch (err) {
       console.error(err)
