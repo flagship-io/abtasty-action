@@ -1,6 +1,10 @@
 name: 'AB Tasty'
-description: 'AB Tasty CLI in github action'
+description: 'AB Tasty CLI in GitHub action'
 author: 'Chadi LAOULAOU <chadiii> | AB Tasty'
+branding:
+  icon: 'box'
+  color: 'blue'
+
 
 # Define your inputs here.
 inputs:
