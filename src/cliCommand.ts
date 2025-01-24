@@ -33,13 +33,13 @@ export class Cli {
       const abtastyDirWindows = '\\abtasty-cli'
 
       if (process.platform.toString() === 'win32') {
-        return `${abtastyDirWindows}\\${CliVersion}\\abtasty-cli.exe`
+        return `${abtastyDirWindows}\\abtasty-cli.exe`
       }
       if (process.platform.toString() === 'darwin') {
-        return `${abtastyDir}/${CliVersion}/abtasty-cli`
+        return `${abtastyDir}/abtasty-cli`
       }
-      await fs.promises.access(join(abtastyDir, `${CliVersion}/abtasty-cli`))
-      return `${abtastyDir}/${CliVersion}/abtasty-cli`
+      await fs.promises.access(join(abtastyDir, `abtasty-cli`))
+      return `${abtastyDir}/abtasty-cli`
     } catch (err: any) {
       setError(`Error: ${err}`, false)
       return err.error

@@ -68,6 +68,7 @@
     "@actions/core": "^1.11.1",
     "@actions/exec": "^1.1.1",
     "@actions/github": "^6.0.0",
+    "@actions/tool-cache": "^1.6.1",
     "axios": "^1.7.9",
     "decompress": "^4.2.1",
     "rimraf": "^5.0.5",

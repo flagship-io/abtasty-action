@@ -1,60 +1,37 @@
-import decompress from 'decompress'
-import * as fs from 'fs'
 import { CliVersion } from './cliCommand'
+import * as tc from '@actions/tool-cache'
+import * as fs from 'fs'
 
 export async function CliDownloader(binaryDir: string) {
   const abtastyDir = 'abtasty-cli'
-  const cliTar = `abtasty-cli/abtasty-cli-${CliVersion}.tar.gz`
+  let platform = process.platform.toString()
+  let cliUrl: string
+  let arch: string
 
-  async function installDir(): Promise<void> {
-    let platform = process.platform.toString()
-    let cliUrl: string
-    let arch: string
-    const file = fs.createWriteStream(cliTar)
-
-    if (!fs.existsSync(abtastyDir)) {
-      fs.mkdirSync(abtastyDir)
-    }
-    if (!fs.existsSync(binaryDir)) {
-      fs.mkdirSync(binaryDir)
-    }
-
-    if (platform === 'win32') {
-      platform = 'windows'
-    }
-
-    switch (process.arch) {
-      case 'x64':
-        arch = 'amd64'
-        break
-      case 'ia32':
-        arch = '386'
-        break
-      default:
-        arch = process.arch
-    }
-
-    if (platform === 'darwin') {
-      cliUrl = `https://github.com/flagship-io/abtasty-cli/releases/download/v${CliVersion}/abtasty-cli_${CliVersion}_darwin_all.tar.gz`
-    } else {
-      cliUrl = `https://github.com/flagship-io/abtasty-cli/releases/download/v${CliVersion}/abtasty-cli_${CliVersion}_${platform}_${arch}.tar.gz`
-    }
-
-    try {
-      const archivedCLI = await fetch(cliUrl)
-      const a = await archivedCLI.arrayBuffer()
-      file.write(new Uint8Array(a))
-      file.end()
-    } catch (err) {
-      console.error(err)
-    }
-    await decompress(cliTar, binaryDir)
-    fs.chmodSync(`${binaryDir}/abtasty-cli`, '777')
+  if (platform === 'win32') {
+    platform = 'windows'
   }
 
-  async function download(): Promise<void> {
-    await installDir()
+  switch (process.arch) {
+    case 'x64':
+      arch = 'amd64'
+      break
+    case 'ia32':
+      arch = '386'
+      break
+    default:
+      arch = process.arch
   }
 
-  await download()
+  let downloadPath = ''
+
+  if (platform === 'darwin') {
+    cliUrl = `https://github.com/flagship-io/abtasty-cli/releases/download/v${CliVersion}/abtasty-cli_${CliVersion}_darwin_all.tar.gz`
+  } else {
+    cliUrl = `https://github.com/flagship-io/abtasty-cli/releases/download/v${CliVersion}/abtasty-cli_${CliVersion}_${platform}_${arch}.tar.gz`
+  }
+
+  downloadPath = await tc.downloadTool(cliUrl, binaryDir)
+  const archivePath = await tc.extractTar(downloadPath, abtastyDir)
+  fs.chmodSync(`${archivePath}/abtasty-cli`, '777')
 }
