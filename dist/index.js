@@ -40778,7 +40778,7 @@ async function CliDownloader(binaryDir) {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/gzip',
-                    'Accept-Encoding': 'gzip,deflate,br'
+                    'Accept-Encoding': '*'
                 }
             });
             file.write(archivedCLI.data);
