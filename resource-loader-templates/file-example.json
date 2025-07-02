@@ -28,14 +28,8 @@
                                 "modifications": {
                                     "type": "FLAG",
                                     "value": {
-                                        "IsReleased": {
-                                            "type": "boolean",
-                                            "value": true
-                                        },
-                                        "tag-release": {
-                                            "type": "string",
-                                            "value": "dymanic-git-tag-version"
-                                        }
+                                        "IsReleased": true,
+                                        "tag-release": "dymanic-git-tag-version"
                                     }
                                 }
                             }
@@ -95,10 +89,7 @@
                                 "modifications": {
                                     "type": "FLAG",
                                     "value": {
-                                        "tag-release": {
-                                            "type": "string",
-                                            "value": "0.0.2"
-                                        }
+                                        "tag-release": "0.0.2"
                                     }
                                 }
                             },
@@ -109,14 +100,8 @@
                                 "modifications": {
                                     "type": "FLAG",
                                     "value": {
-                                        "feature_payment_applePay_enable": {
-                                            "type": "boolean",
-                                            "value": true
-                                        },
-                                        "tag-release": {
-                                            "type": "string",
-                                            "value": "0.0.1"
-                                        }
+                                        "feature_payment_applePay_enable": true,
+                                        "tag-release": "0.0.1"
                                     }
                                 }
                             }
